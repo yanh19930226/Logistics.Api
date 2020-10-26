@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Xunit;
 using YunTu.SDK;
 using YunTu.SDK.Models;
+using YunTu.SDK.Models.Orders;
 
 namespace Logistics.Api.Test
 {
@@ -65,20 +66,69 @@ namespace Logistics.Api.Test
         [Fact]
         public async Task CreateOrder()
         {
-            var res = await _client.PostRequestAsync<BaseResponse<List<OrderResponse>>>(new CreateOrderRequest(Code, ApiSecret)
+            var res = await _client.PostOrderRequestAsync<BaseResponse<List<OrderResponse>>>(new CreateOrderRequest(Code, ApiSecret)
             {
-                          CustomerOrderNumber="123333",
-                          ShippingMethodCode= "THPHR",
-                          PackageCount=2,
-                          Weight = 1.00m,
-                          Receiver =new Receiver {
-                    CountryCode="",
-                    FirstName="yanh",
-                    LastName="hui",
-                    Company="yanh",
-                    Street="yanh",
-                    City="yanh"
+
+                OrderRequest=new List<OrderRequest>() {
+                    new OrderRequest(){
+                         CustomerOrderNumber = "123333",
+                    ShippingMethodCode = "THPHR",
+                    PackageCount = 1,
+                    Weight = 1.00m,
+                    Receiver = new Receiver
+                    {
+                        State="CA",
+                        Zip="92656",
+                        Email="dwhitcher07@gmail.com",
+                        Phone="(949) 887-3875",
+                        CountryCode = "US",
+                        FirstName = "Donna",
+                        LastName = "Whitcher",
+                        Company = "yanh",
+                        Street = "68 Breakers Lane",
+                        City = "ALISO VIEJO"
+                    },
+                    Parcels=new List<Parcels>(){ 
+                       new Parcels{
+                           CName="测试",
+                           EName="test",
+                           Quantity=1,
+                           UnitPrice=2m,
+                           UnitWeight=1m,
+                           CurrencyCode="USD"
+                       }
+                    }
+                    }
                 }
+            });
+            Assert.True(res.Code == "0000");
+        }
+
+        /// <summary>
+        /// 查询运单
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task GetOrder()
+        {
+            var res = await _client.GetRequestAsync<BaseResponse<GetOrderResponse>>(new GetOrderRequest(Code, ApiSecret)
+            {
+                OrderNumber = "YT2030021272207392",
+            });
+            Assert.True(res.Code == "0000");
+        }
+
+        /// <summary>
+        /// 修改订单预报重量
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task UpdateWeight()
+        {
+            var res = await _client.PostRequestAsync<BaseResponse<UpdateWeightResponse>>(new UpdateWeightRequest(Code, ApiSecret)
+            {
+               OrderNumber= "YT2030021272207392",
+                Weight=3.0m
             });
             Assert.True(res.Code == "0000");
         }

@@ -25,6 +25,8 @@ namespace YunTu.SDK.Models
         public string TimeStamp { get; set; }
         [JsonConverter(typeof(DataConvert))]
         public T Items { get; set; }
+        [JsonConverter(typeof(DataConvert))]
+        public T Item { get; set; }
     }
 
 

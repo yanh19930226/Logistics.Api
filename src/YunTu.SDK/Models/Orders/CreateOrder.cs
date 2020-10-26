@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace YunTu.SDK.Models
+namespace YunTu.SDK.Models.Orders
 {
     public class CreateOrderRequest : BaseRequest<BaseResponse<List<OrderResponse>>>
     {
@@ -11,7 +11,14 @@ namespace YunTu.SDK.Models
 
         }
 
+        public List<OrderRequest> OrderRequest { get; set; }
 
+        public override string Url => "http://oms.api.yunexpress.com/api/WayBill/CreateOrder";
+    }
+
+
+    public class OrderRequest
+    {
         /// <summary>
         /// 客户订单号,不能重复
         /// </summary>
@@ -28,10 +35,14 @@ namespace YunTu.SDK.Models
         /// 预估包裹总重量，单位 kg,最多 3 位小数
         /// </summary>
         public decimal Weight { get; set; }
-
+        /// <summary>
+        /// 收件人信息
+        /// </summary>
         public Receiver Receiver { get; set; }
-        public override string Url => "http://oms.api.yunexpress.com/api/WayBill/CreateOrder";
+
+        public List<Parcels> Parcels { get; set; }
     }
+
     public class OrderResponse
     {
         /// <summary>
@@ -68,45 +79,5 @@ namespace YunTu.SDK.Models
         public string TrackingNumber { get; set; }
 
         public List<ShipperBoxs> ShipperBoxs { get; set; }
-    }
-
-    public class Receiver
-    {
-        /// <summary>
-        ///收件人所在国家，填写国际通用标准 2 位简码， 可通过国家查询服务查询
-        /// </summary>
-        public string CountryCode { get; set; }
-        /// <summary>
-        ///收件人姓
-        /// </summary>
-        public string FirstName { get; set; }
-        /// <summary>
-        ///收件人名字
-        /// </summary>
-        public string LastName { get; set; }
-        /// <summary>
-        /// 收件人公司名称
-        /// </summary>
-        public string Company { get; set; }
-        /// <summary>
-        /// 收件人详细地址
-        /// </summary>
-        public string Street { get; set; }
-        /// <summary>
-        /// City
-        /// </summary>
-        public string City { get; set; }
-    }
-
-    public class ShipperBoxs
-    {
-        /// <summary>
-        ///箱子号码
-        /// </summary>
-        public string BoxNumber { get; set; }
-        /// <summary>
-        ///物流运单子单号
-        /// </summary>
-        public string ShipperHawbcode { get; set; }
     }
 }

@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using YunTu.SDK.Models;
+using YunTu.SDK.Models.Orders;
 
 namespace YunTu.SDK
 {
@@ -57,5 +58,20 @@ namespace YunTu.SDK
                 .PostJsonAsync(request)
                 .ReceiveJson<T>();
         }
+
+        /// <summary>
+        /// 创建订单
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public Task<BaseResponse<List<OrderResponse>>> PostOrderRequestAsync<T>(CreateOrderRequest request)
+        {
+            var Token = request.Code + "&" + request.ApiSecret;
+            return $"{request.Url}".WithHeaders(new { Accept = "application/json", Authorization = "Basic " + Base64Encode(Token) })
+                .PostJsonAsync(request.OrderRequest)
+                .ReceiveJson<BaseResponse<List<OrderResponse>>>();
+        }
+
     }
 }
