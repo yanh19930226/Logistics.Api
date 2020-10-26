@@ -1,10 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using Core;
+using Core.Consul;
+using Core.Logger;
+using Core.Swagger;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -12,37 +18,29 @@ using Microsoft.Extensions.Logging;
 
 namespace Logistics.Api
 {
-    public class Startup
+    public class Startup : CommonStartup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration) : base(configuration)
         {
-            Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public override void CommonServices(IServiceCollection services)
         {
-            services.AddControllers();
+            //services.AddDbContext<BasicContext>(options =>
+            //{
+            //    options.UseMySql(Configuration.GetSection("Zeus:Connection").Value, sql => sql.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name));
+            //});
+
+            services.AddCoreSeriLog()
+                     .AddConsul()
+                             .AddCoreSwagger();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public override void CommonConfigure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app
+                .UseConsul()
+                .UseCoreSwagger();
         }
     }
 }

@@ -11,6 +11,12 @@ namespace Logistics.Api.Models.Domain
     /// </summary>
     public class LogisticsCompany : Entity
     {
+        public LogisticsCompany()
+        {
+            LogisticsCompanyCountryConfigs = new List<LogisticsCompanyCountryConfig>();
+        }
         public string Name { get; set; }
+
+        public List<LogisticsCompanyCountryConfig> LogisticsCompanyCountryConfigs { get; set; }
     }
 }

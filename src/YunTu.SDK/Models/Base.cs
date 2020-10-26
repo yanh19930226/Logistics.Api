@@ -7,14 +7,14 @@ namespace YunTu.SDK.Models
 {
     public abstract class BaseRequest<T>
     {
-        public BaseRequest(string apiKey, string apiSecret)
+        public BaseRequest(string code, string apiSecret)
         {
-            this.ApiKey = apiKey;
+            this.Code = code;
             this.ApiSecret = apiSecret;
         }
-        public string ApiKey { get; set; }
+        public string Code { get; set; }
         public string ApiSecret { get; set; }
-        public abstract string Url { get; set; }
+        public abstract string Url { get;}
     }
 
     public class BaseResponse<T>
@@ -23,6 +23,7 @@ namespace YunTu.SDK.Models
         public string Message { get; set; }
         public string RequestId { get; set; }
         public string TimeStamp { get; set; }
+        [JsonConverter(typeof(DataConvert))]
         public T Items { get; set; }
     }
 
