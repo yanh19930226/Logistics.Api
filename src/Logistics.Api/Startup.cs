@@ -32,14 +32,14 @@ namespace Logistics.Api
             //});
 
             services.AddCoreSeriLog()
-                     .AddConsul()
+                     //.AddConsul()
                              .AddCoreSwagger();
         }
 
         public override void CommonConfigure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app
-                .UseConsul()
+                //.UseConsul()
                 .UseCoreSwagger();
         }
     }
